@@ -1,6 +1,10 @@
 package lab3;
 
-public class Book {
+import java.io.Serializable;
+
+public class Book implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String title;
     private String author;
     private String publisher;
@@ -26,7 +30,9 @@ public class Book {
 
     @Override
     public String toString() {
-        return String.format("Книга [Назва: '%s', Автор: '%s', Видавництво: '%s', Рік: %d, Сторінок: %d, Ціна: %.2f грн]",
-                title, author, publisher, year, pages, price);
+        return String.format(
+                "Книга [Назва: '%s', Автор: '%s', Видавництво: '%s', Рік: %d, Сторінок: %d, Ціна: %.2f грн]",
+                title, author, publisher, year, pages, price
+        );
     }
 }

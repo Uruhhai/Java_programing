@@ -4,14 +4,18 @@ import java.util.List;
 import java.util.Scanner;
 
 public class LibraryView {
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
+
+    public LibraryView(Scanner scanner) {
+        this.scanner = scanner;
+    }
 
     public void printMessage(String message) {
         System.out.println(message);
     }
 
     public void printBooks(Book[] books) {
-        System.out.println("\n--- Список книг у базі ---");
+        System.out.println("\n--- Список книг ---");
         if (books == null || books.length == 0) {
             System.out.println("Список порожній.");
             return;
@@ -19,13 +23,13 @@ public class LibraryView {
         for (int i = 0; i < books.length; i++) {
             System.out.println((i + 1) + ". " + books[i]);
         }
-        System.out.println("--------------------------\n");
+        System.out.println("-------------------\n");
     }
 
     public void printBookList(List<Book> books, String criteria) {
         System.out.println("\n--- Результати пошуку (" + criteria + ") ---");
         if (books == null || books.isEmpty()) {
-            System.out.println("За заданим критерієм книг не знайдено."); // Вимога п.3
+            System.out.println("За заданим критерієм книг не знайдено.");
         } else {
             for (int i = 0; i < books.size(); i++) {
                 System.out.println((i + 1) + ". " + books.get(i));
@@ -34,20 +38,33 @@ public class LibraryView {
         System.out.println("---------------------------------------------\n");
     }
 
+    public String promptString(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine().trim();
+    }
+
+    public int promptInt(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Помилка вводу: очікується ціле число. Спробуйте ще раз.");
+            }
+        }
+    }
+
     public int showMenu() {
         System.out.println("=== МЕНЮ УПРАВЛІННЯ БІБЛІОТЕКОЮ ===");
-        System.out.println("1. Вивести вихідний масив книг");
-        System.out.println("2. Отримати список книг зазначеного автора (випадковий вибір)");
-        System.out.println("3. Отримати список книг зазначеного видавництва (випадковий вибір)");
-        System.out.println("4. Отримати список книг, виданих пізніше вказаного року (випадковий вибір)");
+        System.out.println("1. Вивести поточний масив книг");
+        System.out.println("2. Пошук книг за автором (ввід з клавіатури)");
+        System.out.println("3. Пошук книг за видавництвом (ввід з клавіатури)");
+        System.out.println("4. Пошук книг, виданих пізніше вказаного року (ввід з клавіатури)");
         System.out.println("5. Відсортувати книги за видавництвами (Comparator)");
+        System.out.println("6. Зберегти набір книг у файл (серіалізація)");
+        System.out.println("7. Прочитати набір книг із файлу (десеріалізація)");
         System.out.println("0. Вихід");
-        System.out.print("Оберіть пункт меню: ");
-
-        while (!scanner.hasNextInt()) {
-            System.out.print("Помилка! Введіть число від 0 до 5: ");
-            scanner.next();
-        }
-        return scanner.nextInt();
+        return promptInt("Оберіть пункт меню: ");
     }
 }

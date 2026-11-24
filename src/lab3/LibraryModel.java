@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
 public class LibraryModel {
     private Book[] books;
@@ -13,7 +12,6 @@ public class LibraryModel {
         initializeDefaultData();
     }
 
-    // Ініціалізація заздалегідь підготовленими даними (масив >= 10 елементів)
     private void initializeDefaultData() {
         books = new Book[] {
                 new Book("Кобзар", "Тарас Шевченко", "Дніпро", 1840, 250, 150.0),
@@ -33,57 +31,47 @@ public class LibraryModel {
         return books;
     }
 
-    // 1. Отримати список книг зазначеного автора
+    public void setBooks(Book[] books) {
+        if (books == null) {
+            throw new IllegalArgumentException("Масив книг не може бути null.");
+        }
+        this.books = books;
+    }
+
     public List<Book> findByAuthor(String author) {
         List<Book> result = new ArrayList<>();
         for (Book book : books) {
-            if (book.getAuthor().equalsIgnoreCase(author)) {
+            if (book != null && book.getAuthor().equalsIgnoreCase(author)) {
                 result.add(book);
             }
         }
         return result;
     }
 
-    // 2. Отримати список книг, які видані зазначеним видавництвом
     public List<Book> findByPublisher(String publisher) {
         List<Book> result = new ArrayList<>();
         for (Book book : books) {
-            if (book.getPublisher().equalsIgnoreCase(publisher)) {
+            if (book != null && book.getPublisher().equalsIgnoreCase(publisher)) {
                 result.add(book);
             }
         }
         return result;
     }
 
-    // 3. Отримати список книг, виданих пізніше вказаного року
     public List<Book> findByYearAfter(int year) {
         List<Book> result = new ArrayList<>();
         for (Book book : books) {
-            if (book.getYear() > year) {
+            if (book != null && book.getYear() > year) {
                 result.add(book);
             }
         }
         return result;
     }
 
-    // 4. Відсортувати книги за видавництвами (використовуючи Comparator)
     public void sortByPublisher() {
-        Arrays.sort(books, Comparator.comparing(Book::getPublisher, String.CASE_INSENSITIVE_ORDER));
-    }
-
-    // Методи для вибору випадкових даних для пошуку
-    public String getRandomAuthor() {
-        Random rand = new Random();
-        return books[rand.nextInt(books.length)].getAuthor();
-    }
-
-    public String getRandomPublisher() {
-        Random rand = new Random();
-        return books[rand.nextInt(books.length)].getPublisher();
-    }
-
-    public int getRandomYear() {
-        Random rand = new Random();
-        return books[rand.nextInt(books.length)].getYear();
+        Arrays.sort(books, Comparator.comparing(
+                Book::getPublisher,
+                Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)
+        ));
     }
 }
